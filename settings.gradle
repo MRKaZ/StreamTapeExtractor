@@ -1,0 +1,3 @@
+rootProject.name = "StreamTapeExtractor"
+include ':app'
+include ':mrkazstreamtape'
