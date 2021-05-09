@@ -10,10 +10,12 @@
 
   <h3 align="center">StreamTape Extractor</h3>
 
-  <p align="center">
-    A simple extractor for StreamTape
-    <br />
+ 
 </p>
+
+<div align="center">
+	<img src="https://streamtape.com/images/Logo@2x.png" width="512">
+</div>
 
 <!-- ABOUT THE PROJECT -->
 # About The Project
