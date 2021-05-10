@@ -79,12 +79,20 @@ dependencies {
 
 **You can extract the links and get the data responses following this**
 
+**Supported url types ;**
+
+| Supported Url Types | Status |
+| --- | --- |
+| **https://streamtape.com/e/XXXXXXXXXXXXXXX/** | :heavy_check_mark:
+| **https://streamtape.com/v/XxXxXxXxXxXxXx/XXXXX.XXXXX.XXXXX.XXXXX.XXXXX-XXXXX.XXX** | :heavy_check_mark:
+
 ```java
+
  StreamTapeExtractor.getHTTPRequest(
                     // Context or Activity
                     MainActivity.this,
                     // StreamTape Url
-                    "https://streamtape.com/e/02W0ORe2ZgSbooP/",
+                    "https://streamtape.com/e/XXXXXXXXXXXXXXX/",
                     // RequestListener 
                     new RequestListener() {
                         @Override
