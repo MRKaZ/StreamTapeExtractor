@@ -4,12 +4,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="StreamTape Extractor">
-    <img src="https://image.flaticon.com/icons/png/512/93/93989.png" alt="Logo" width="200" height="200">
-  </a>
 
-  <h3 align="center">StreamTape Extractor</h3>
-
+  <h3 align="center">StreamTape Extractor for Android</h3>
  
 </p>
 
