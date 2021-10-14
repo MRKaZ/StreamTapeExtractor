@@ -36,7 +36,7 @@ Getting a HTTP response with the given url and matched it with some Regex patter
                                  RequestListener RequestListener)
 ```
 
-### Prerequisites
+## Prerequisites
 
 Add this in your root `build.gradle` file (**not** in your `build.gradle.app` add it into your module `build.gradle` file):
 
@@ -49,7 +49,7 @@ allprojects {
 }
 ```
 
-### Dependency
+## Dependency
 
 Add this to your module's `build.gradle` file:
 
@@ -60,7 +60,7 @@ dependencies {
 }
 ```
 
-### Supports
+## Supports
 
 **Supported url types ;**
 
@@ -69,7 +69,7 @@ dependencies {
 | **https://streamtape.com/e/XXXXXXXXXXXXXXX/** | :heavy_check_mark:
 | **https://streamtape.com/v/XxXxXxXxXxXxXx/XXXXX.XXXXX.XXXXX.XXXXX.XXXXX-XXXXX.XXX** | :heavy_check_mark:
 
-### Usage
+## Usage
 
 **You can extract the video data following this**
 
@@ -119,13 +119,12 @@ dependencies {
                     });
 ```
 
-##
-### Credits
+## Credits
 
 This app built with the **Jsoup** HTML parser library
 * [JSOUP](https://github.com/jhy/jsoup)
 
-### Changelog
+## Changelog
 ```
 [v1.2] [14/10/2021]
 
