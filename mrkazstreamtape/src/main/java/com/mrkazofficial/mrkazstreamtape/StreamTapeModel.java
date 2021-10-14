@@ -21,31 +21,40 @@ limitations under the License.*/
 
 public class StreamTapeModel {
 
-    private String setTitle;
-    private String setDownloadUrl;
-    private String getThumbnail;
+    private String Title;
+    private String DownloadUrl;
+    private String DirectDownloadUrl;
+    private String Thumbnail;
 
     public String getTitle() {
-        return setTitle;
+        return Title;
     }
 
-    public void setTitle(String setFileName) {
-        this.setTitle = setFileName;
+    public void setTitle(String title) {
+        Title = title;
     }
 
     public String getDownloadUrl() {
-        return setDownloadUrl;
+        return DownloadUrl;
     }
 
-    public void setSetDownloadUrl(String setDownloadUrl) {
-        this.setDownloadUrl = setDownloadUrl;
+    public void setDownloadUrl(String downloadUrl) {
+        DownloadUrl = downloadUrl;
+    }
+
+    public String getDirectDownloadUrl() {
+        return DirectDownloadUrl;
+    }
+
+    public void setDirectDownloadUrl(String directDownloadUrl) {
+        DirectDownloadUrl = directDownloadUrl;
     }
 
     public String getThumbnail() {
-        return getThumbnail;
+        return Thumbnail;
     }
 
-    public void setThumbnail(String getThumbnail) {
-        this.getThumbnail = getThumbnail;
+    public void setThumbnail(String thumbnail) {
+        Thumbnail = thumbnail;
     }
 }

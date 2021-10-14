@@ -1,6 +1,7 @@
 package com.mrkazofficial.mrkazstreamtape;
 
-/*Copyright [2021] [MRKaZ]
+/*
+Copyright [2021] [MRKaZ]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,156 +15,189 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-import android.app.Activity;
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.os.StrictMode;
+import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.StreamTapeThumbRegexEnd;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.StreamTapeThumbRegexStart;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.StreamTapeTitleRegexEnd;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.StreamTapeTitleRegexStart;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.StreamTapeUrlRegexEnd;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.StreamTapeUrlRegexStart;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeHttpUtils.getHTTPResponse;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.matchTokenRegex;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.matchUrlRegex;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.redirectUrl;
 
 /**
  * @author MRKaZ
  * @since 5:18 AM, 5/6/2021, 2021
  */
 
+@SuppressLint({"LongLogTag", "StaticFieldLeak"})
 public class StreamTapeExtractor {
 
+
     /**
-     * @param Context         Context to the Volley request
-     * @param Url             Url of the StreamTape to extract
-     * @param RequestListener RequestListener for the listening the given data from the Volley
+     * @implNote This is an important function to register network thread policy
      */
-    private static void getHTTPRequest(Context Context, String Url, RequestListener RequestListener) {
-        //mContext = Context;
-        RequestQueue mRequestQueue = Volley.newRequestQueue(Context);
-        // Request a string response from the provided URL.
-        StringRequest mStringRequest = new StringRequest(Request.Method.GET, Url,
-                response -> {
-                    // Display the response string.
-                    if (response != null) {
-                        ArrayList<StreamTapeModel> mStreamTapeModelArrayList = new ArrayList<>();
-                        StreamTapeModel mStreamTapeModel = new StreamTapeModel();
-                        // Set extracted Download link to model class
-                        mStreamTapeModel.setSetDownloadUrl(generatedDownloadLink(response));
-                        // Set extracted Title link to model class
-                        mStreamTapeModel.setTitle(extractTitle(response));
-                        // Set extracted Thumbnail image link to model class
-                        mStreamTapeModel.setThumbnail(extractThumbnail(response));
-                        // Add all the data in to the StreamTapeModel ArrayList
-                        mStreamTapeModelArrayList.add(mStreamTapeModel);
-                        // Adding data values to the RequestListener
-                        RequestListener.onResponse(mStreamTapeModelArrayList);
-                    }
-                }, error -> {
-            // On Error send error message to extractor response
-            RequestListener.onError(error.getMessage());
-        });
-        // Add the request to the RequestQueue.
-        mRequestQueue.add(mStringRequest);
+    public static void initiate() {
+        StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(threadPolicy);
     }
 
     /**
-     * @param Context         Context to the Volley request
-     * @param Url             Url of the StreamTape to extract
-     * @param RequestListener RequestListener for the listening the given data from the Volley
+     * @param Url             of the video in StreamTape to extract
+     * @param RequestListener for the listening the given data from the Volley
      */
-    public static void getHTTPRequest(Activity Activity, String Url, RequestListener RequestListener) {
-        //mActivity = Activity;
-        RequestQueue mRequestQueue = Volley.newRequestQueue(Activity);
-        // Request a string response from the provided URL.
-        StringRequest mStringRequest = new StringRequest(Request.Method.GET, Url,
-                response -> {
-                    // Display the response string.
-                    if (response != null) {
-                        ArrayList<StreamTapeModel> mStreamTapeModelArrayList = new ArrayList<>();
-                        StreamTapeModel mStreamTapeModel = new StreamTapeModel();
-                        // Set extracted Download link to model class
-                        mStreamTapeModel.setSetDownloadUrl(generatedDownloadLink(response));
-                        // Set extracted Title link to model class
-                        mStreamTapeModel.setTitle(extractTitle(response));
-                        // Set extracted Thumbnail image link to model class
-                        mStreamTapeModel.setThumbnail(extractThumbnail(response));
-                        // Add all the data in to the StreamTapeModel ArrayList
-                        mStreamTapeModelArrayList.add(mStreamTapeModel);
-                        // Adding data values to the RequestListener
-                        RequestListener.onResponse(mStreamTapeModelArrayList);
-                    }
-                }, error -> {
-            // On Error send error message to extractor response
-            RequestListener.onError(error.getMessage());
-        });
-        // Add the request to the RequestQueue.
-        mRequestQueue.add(mStringRequest);
+    @SuppressLint("SetJavaScriptEnabled")
+    public static void extractData(String Url, RequestListener RequestListener) {
+        // <StreamTapeModel> Model array list
+        ArrayList<StreamTapeModel> mStreamTapeModelArrayList = new ArrayList<>();
+        // <StreamTapeModel> Model
+        StreamTapeModel mStreamTapeModel = new StreamTapeModel();
+        try {
+            // Getting HTTP response
+            String response = getHTTPResponse(Url);
+            // Set extracted Download link to model class
+            mStreamTapeModel.setDownloadUrl(generatedDownloadLink(response));
+            // Set Direct Download link to model class
+            mStreamTapeModel.setDirectDownloadUrl(redirectUrl(generatedDownloadLink(response)));
+            // Set extracted Title link to model class
+            mStreamTapeModel.setTitle(extractTitle(response));
+            // Set extracted Thumbnail image link to model class
+            mStreamTapeModel.setThumbnail(extractThumbnail(response));
+            // Add all the data in to the StreamTapeModel ArrayList
+            mStreamTapeModelArrayList.add(mStreamTapeModel);
+            // Adding data values to the RequestListener
+            RequestListener.onResponse(mStreamTapeModelArrayList);
+        } catch (Exception exception) {
+            // OnError
+            //exception.printStackTrace();
+            RequestListener.onError(exception.getLocalizedMessage());
+        }
     }
 
     /**
      * @param Response Response to get the Title of the given url
+     *                 [INFORMATION]
+     *                 - Title position --> 1
+     *                 - Description position --> 2
+     *                 - Type position --> 3
+     *                 - Actual url position --> 4
      */
     private static String extractTitle(String Response) {
-        String mFinalTitleResults = null;
         if (Response != null) {
-            String mResponseStart = StreamTapeTitleRegexStart;
-            int mIdx = Response.indexOf(mResponseStart);
-            if (mIdx != -1) {
-                Response = Response.substring(mIdx + mResponseStart.length());
-                String mSubstring = Response.substring(0, Response.indexOf(StreamTapeTitleRegexEnd));
-                mFinalTitleResults = replaceCharacters(mSubstring);
-            }
+            Document responseDoc = Jsoup.parse(Response);
+            Elements metaElements = responseDoc.select("meta");
+
+            // Get the title
+            Element titleElement = metaElements.get(1);
+            // Get the Description
+            //Element descElement = metaElements.get(2);
+            // Get the Type
+            //Element typeElement = metaElements.get(3);
+            // Get the Actual url
+            //Element aUrlElement = metaElements.get(4);
+
+            // Title with extension
+            String titleWithExt = titleElement.attr("content");
+            // Title without extension
+            //String titleWithoutExt = titleWithExt.substring(0, titleWithExt.lastIndexOf("."));
+
+            //Log.w("StreamTapeExtractor.java:89", "Title With Ext --> " + titleWithExt);
+            //Log.w("StreamTapeExtractor.java:89", "Title Without Ext --> " + titleWithoutExt);
+            //Log.w("StreamTapeExtractor.java:89", "Description --> " + descElement.toString());
+            //Log.w("StreamTapeExtractor.java:89", "Type --> " + typeElement.toString());
+            //Log.w("StreamTapeExtractor.java:89", "Actual url --> " + aUrlElement.toString());
+
+            return titleWithExt.substring(0, titleWithExt.lastIndexOf("."));
         }
-        return mFinalTitleResults;
+        return null;
     }
 
     /**
      * @param Response Response to get the Thumbnail of the given url
      */
     private static String extractThumbnail(String Response) {
-        String mFinalThumbResults = null;
         if (Response != null) {
-            String mResponseStart = StreamTapeThumbRegexStart;
-            int mIdx = Response.indexOf(mResponseStart);
-            if (mIdx != -1) {
-                Response = Response.substring(mIdx + mResponseStart.length());
-                String mSubstring = Response.substring(0, Response.indexOf(StreamTapeThumbRegexEnd));
-                mFinalThumbResults = replaceCharacters(mSubstring);
+            // Parse the response using JSOUP
+            Document responseDoc = Jsoup.parse(Response);
+            // Parse the Thumbnail link
+            Element main_video_element = responseDoc.getElementById("mainvideo");
+            if (main_video_element != null) {
+                //String posterLink = main_video_element.attr("poster");
+                //Log.w("StreamTapeExtractor.java:139", "posterLink  --> " + posterLink);
+                return main_video_element.attr("poster");
             }
         }
-        return mFinalThumbResults;
+        return null;
     }
 
     /**
-     * @param Response Response to get the generate the final download link
+     * @param mResponse Response to generate the downloadable video link
      */
-    private static String generatedDownloadLink(String Response) {
-        String mFinalUrlResults = null;
-        if (Response != null) {
-            String mResponseStart = StreamTapeUrlRegexStart;
-            int mIdx = Response.indexOf(mResponseStart);
-            if (mIdx != -1) {
-                Response = Response.substring(mIdx + mResponseStart.length());
-                String mSubstring = Response.substring(0, Response.indexOf(StreamTapeUrlRegexEnd));
-                mFinalUrlResults = replaceCharacters(mSubstring);
+    private static String generatedDownloadLink(String mResponse) {
+
+        String globalValue = "https:/";
+
+        if (mResponse != null) {
+            // Parse the response using JSOUP
+            Document responseDoc = Jsoup.parse(mResponse);
+
+            // Get the download token
+            String getToken = getToken(mResponse);
+
+            // Actual link's... Redirecting to streamtape_do_not_delete.mp4
+            //Element ideoo_link_elements = responseDoc.getElementById("ideoolink");
+            //String strIdeooLink = ideoo_link_elements.text();
+
+            Element robot_link_elements = responseDoc.getElementById("robotlink");
+            if (robot_link_elements != null) {
+                String strRobotLink = robot_link_elements.text();
+                strRobotLink = strRobotLink.substring(0, strRobotLink.lastIndexOf("="));
+                //String finalUrl  = globalValue + strRobotLink + "=" + getToken;
+
+                //Log.e("StreamTapeExtractor.java:190", "generatedDownloadLink  --> " + finalUrl);
+                //Log.e("StreamTapeExtractor.java:193", "redirectUrl  --> " + redirectUrl(finalUrl));
+
+                return globalValue + strRobotLink + "=" + getToken;
             }
+
+            Log.e("StreamTapeExtractor.java:208", "getToken  --> " + getToken);
+
         }
 
-        return mFinalUrlResults;
+        return null;
     }
 
     /**
-     * @param Results Results to replace the Meta Characters
+     * @param mResponse HTML response to parse Token
+     * @return As a String with parsed Token
      */
-    private static String replaceCharacters(String Results) {
-        String mReplaceInnerHTML = Results.replace(".innerHTML = \"", "https:");
-        String mReplaceMeta = mReplaceInnerHTML.replace("\" + ", "");
-        return mReplaceMeta.replaceAll("'", "");
+    private static String getToken(String mResponse) {
+
+        Document responseDoc = Jsoup.parse(mResponse);
+        // Search CSS Query <script> </script>
+        Elements elements = responseDoc.select("script");
+
+        // List of urls
+        List<String> urlList = matchUrlRegex(elements.get(6).toString());
+
+        // Get the url by the positions --> Integer positions 0, 1, 2
+        //String strIdeooLink = urlList.get(0);
+        //String strIdeooLink_2 = urlList.get(1);
+        //String strRobotLink = urlList.get(2);
+
+        String strRobotLink = urlList.get(urlList.size() - 1);
+
+        if (strRobotLink.contains("&token=")) {
+            return matchTokenRegex(strRobotLink);
+        }
+
+        return null;
     }
 }
