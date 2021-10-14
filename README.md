@@ -21,7 +21,7 @@
 # About The Project
 
 <div align="center">
-	<img src="https://i.imgur.com/IW7FUuL.png" width="1024">
+	<img src="https://i.imgur.com/E8zobpe.png" width="1024">
 </div>
 
 ##
