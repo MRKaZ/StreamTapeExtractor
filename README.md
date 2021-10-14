@@ -132,6 +132,7 @@ This app built with the **Jsoup** HTML parser library
 ### Changelog
 ```
 [v1.2] [14/10/2021]
+
 + Fixed url extraction error!.
 + Removed and Changed some extraction methods.
 + Removed and Changed some usage methods.
