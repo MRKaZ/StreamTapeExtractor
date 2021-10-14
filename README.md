@@ -109,6 +109,7 @@ dependencies {
                                     // Get download url
                                     String getDownloadUrl = streamTapeModel.getDownloadUrl();
                                     Log.d("StreamTapeExtractor", "onResponse: getDownloadUrl " + getDownloadUrl);
+				    // Get Direct download url
                                     String getDirectUrl = streamTapeModel.getDirectDownloadUrl();
                                     Log.d("StreamTapeExtractor", "onResponse: getDirectUrl " + getDirectUrl);
                                 }
