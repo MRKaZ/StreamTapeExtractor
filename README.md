@@ -1,5 +1,5 @@
 [![](https://jitpack.io/v/MRKaZ/StreamTapeExtractor.svg)](https://jitpack.io/#MRKaZ/StreamTapeExtractor)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![API](https://img.shields.io/badge/%20StreamTapeExtractor-v1.2-brightgreen) ![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![API](https://img.shields.io/badge/%20StreamTapeExtractor-v1.3-brightgreen) ![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg)
 
 
 <!-- PROJECT LOGO -->
