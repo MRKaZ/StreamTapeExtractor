@@ -6,7 +6,7 @@
 <br />
 <p align="center">
 
-  <h3 align="center">StreamTape Extractor for Android</h3>
+  <h3 align="center">UNOFFICIAL DOWNLOAD AND STREAMING LINK EXTRACTOR FOR STREAMTAPE</h3>
  
 </p>
 
@@ -18,17 +18,17 @@
 # About The Project
 
 <div align="center">
-	<img src="https://i.imgur.com/E8zobpe.png" width="1024">
+	<img src="https://i2.paste.pics/85fc8c015ab57d25d8f956970c074c22.png" width="1024">
 </div>
 
 ##
 This is a Simple StreamTape Extractor for the download video files direct using **Jsoup** Html parser library.
-Getting a HTTP response with the given url and matched it with some Regex patterns to extract the 
-**Title, Tumbnail, Download url and the Direct download url**
+Getting a HTTP response with the given url and matched it with some Regex patterns to extract the
+**Title, Tumbnail, Download url and the Direct download url**.
 
 ## Based Config Method..
 
-**StreamTape Extractor** You can follow this config method to extract video data:
+**TODO** You can follow this config method to extract video data:
 
 ###### Config
 
@@ -57,7 +57,7 @@ Add this to your module's `build.gradle` file:
 ```gradle
 dependencies {
 	...
-	 implementation 'com.github.MRKaZ:StreamTapeExtractor:v1.2'
+	 implementation 'com.github.MRKaZ:StreamTapeExtractor:v1.3'
 }
 ```
 
@@ -70,17 +70,33 @@ dependencies {
 | **https://streamtape.com/e/XXXXXXXXXXXXXXX/** | :heavy_check_mark:
 | **https://streamtape.com/v/XxXxXxXxXxXxXx/XXXXX.XXXXX.XXXXX.XXXXX.XXXXX-XXXXX.XXX** | :heavy_check_mark:
 
+
+## Setup Cookies
+#### First of all you have to setup Cookies. And also you can follow this steps down below at the screenshots!. Follow each numbers.
+#### Pictures are too small in the table. Press the picture to see in big view!
+| Sceenshots | Explanation |
+| --- | --- |
+| <img src="https://i2.paste.pics/a787343d15e074a489a3f53debf74341.png" width="350"> | 01.) Go and press the **Lock** icon in the top left. |
+| <img src="https://i2.paste.pics/e7757637655d7f32e73399e7ef37db29.png" width="350"> | 02.) Press the **Cookies** tab. |
+| <img src="https://i2.paste.pics/82dd45401049efb27f8cadfc1f62fd97.png" width="350"> | 03.) After pressed the **Cookies** it will display a dialog!, Go and tap the domaintab go to domain.<br>04.) From the drop down menu select **Cookies** bar.|
+| <img src="https://i2.paste.pics/cefe30c1298c7646ba52d144f4b3e1fd.png" width="350"> | 05.) Scroll down and find the `cf_clearance` cookie. <br> 06.) And copy that all content. |
+| <img src="https://i2.paste.pics/859c2eec3c56985c8eec67eefeebd548.png" width="350"> | 07.) Paste it on the `setCookies` area in the project. |
+
 ## Usage
 
 **You can extract the video data following this**
 
 ### Initiate the Extractor
 ```java
-/* 
- * Keep this mind you have to initiate the Extractor before use you can do it following this
- * Initiate the StreamTapeExtractor !!If you missed this extractor gives error!!
- */
- StreamTapeExtractor.initiate();
+/*
+* Keep this mind you have to initiate the Extractor before use you can do it following this
+* TODO : Initiate the StreamTapeExtractor !!If you missed this! extractor gives error!!
+*/
+StreamTapeExtractor.initiate();
+// TODO : Fill up this with your cookies
+StreamTapeExtractor.setCookies("COOKIE"); // Required
+// TODO : Setup an User Agent if the extractor display's error!?.
+//StreamTapeExtractor.setUserAgent("");
 
 ```
 
@@ -106,9 +122,6 @@ dependencies {
                                     // Get download url
                                     String getDownloadUrl = streamTapeModel.getDownloadUrl();
                                     Log.d("StreamTapeExtractor", "onResponse: getDownloadUrl " + getDownloadUrl);
-				    // Get Direct download url
-                                    String getDirectUrl = streamTapeModel.getDirectDownloadUrl();
-                                    Log.d("StreamTapeExtractor", "onResponse: getDirectUrl " + getDirectUrl);
                                 }
                             }
                         }
@@ -121,14 +134,20 @@ dependencies {
 ```
 
 ## Credits
-
-This app built with the **Jsoup** HTML parser library
-* [JSOUP](https://github.com/jhy/jsoup)
+* [Jsoup](https://github.com/jhy/jsoup)
+* [OkHttp](https://github.com/square/okhttp)
 
 ## Changelog
 ```
-[v1.2] [14/10/2021]
+[v1.3] [07/02/2022]
++ Fixed url extraction error!. (Cloudflare)
+[Dependencies]
++ Added OkHttp (Networking Library) dependency.
+[Methods]
++ Added Cookies, User-Agent functions to the extractor.
+- Removed direct download url.
 
+[v1.2] [14/10/2021]
 + Fixed url extraction error!.
 + Removed and Changed some extraction methods.
 + Removed and Changed some usage methods.
@@ -144,6 +163,7 @@ This app built with the **Jsoup** HTML parser library
 + Simple extraction method for the StreamTape.
 + Extract Url, Title & Thumbnail Image Url.
 
+[UNOFFICIAL DOWNLOAD AND STREAMING LINK EXTRACTOR FOR STREAMTAPE]
 ```
 
 ## Disclaimer
