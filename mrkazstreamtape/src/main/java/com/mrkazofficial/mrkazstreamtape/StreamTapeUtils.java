@@ -16,6 +16,11 @@ import java.util.regex.Pattern;
 
 public class StreamTapeUtils {
 
+    public static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36";
+
+    public static final String VIDEO_NOT_FOUND = "Video not found!";
+    public static final String COOKIE_NULL = "\"Cookies null!\"";
+
     /**
      * @param mValues String of the encoded
      * @return As a decoded string
@@ -26,23 +31,6 @@ public class StreamTapeUtils {
             bytes = Base64.getDecoder().decode(mValues);
         }
         return new String(bytes);
-    }
-
-    /**
-     * @param url Url what tou want to redirect!?
-     * @return As a String response
-     */
-    public static String redirectUrl(String url) {
-        try {
-            HttpURLConnection mHttpURLConnection = (HttpURLConnection) new URL(url).openConnection();
-            mHttpURLConnection.setInstanceFollowRedirects(false);
-            URL secondURL = new URL(mHttpURLConnection.getHeaderField("Location"));
-            URLConnection mURLConnection = secondURL.openConnection();
-            //Log.w("StreamTapeExtractor.java:230", "redirectUrl  --> " + mURLConnection.getURL().toURI());
-            return mURLConnection.getURL().toString();
-        } catch (Exception e) {
-            return null;
-        }
     }
 
 

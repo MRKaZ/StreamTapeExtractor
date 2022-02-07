@@ -23,7 +23,6 @@ public class StreamTapeModel {
 
     private String Title;
     private String DownloadUrl;
-    private String DirectDownloadUrl;
     private String Thumbnail;
 
     public String getTitle() {
@@ -40,14 +39,6 @@ public class StreamTapeModel {
 
     public void setDownloadUrl(String downloadUrl) {
         DownloadUrl = downloadUrl;
-    }
-
-    public String getDirectDownloadUrl() {
-        return DirectDownloadUrl;
-    }
-
-    public void setDirectDownloadUrl(String directDownloadUrl) {
-        DirectDownloadUrl = directDownloadUrl;
     }
 
     public String getThumbnail() {
