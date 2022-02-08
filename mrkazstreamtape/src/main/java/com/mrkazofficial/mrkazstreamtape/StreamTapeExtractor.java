@@ -16,20 +16,21 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeHttpUtils.getHTTPResponse;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.COOKIE_NULL;
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.VIDEO_NOT_FOUND;
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.matchTokenRegex;
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.matchUrlRegex;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.redirectUrl;
 
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
-import android.util.Log;
 
+import org.conscrypt.Conscrypt;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,22 +48,9 @@ public class StreamTapeExtractor {
     public static void initiate() {
         StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(threadPolicy);
+        Security.insertProviderAt(Conscrypt.newProvider(), 1);
     }
 
-    /**
-     * @param cookies Setup your cookie's
-     */
-    public static void setCookies(String cookies) {
-        StreamTapeHttpUtils.setCookies(cookies);
-    }
-
-    /**
-     * @param userAgent Setup your User-Agent
-     * @apiNote If extractor keeps displaying errors!, Setup an custom User-Agent
-     */
-    public static void setUserAgent(String userAgent) {
-        StreamTapeHttpUtils.setUserAgent(userAgent);
-    }
 
     /**
      * @param Url             of the video in StreamTape to extract
@@ -81,6 +69,8 @@ public class StreamTapeExtractor {
                 if (!response.contains(VIDEO_NOT_FOUND)) {
                     // Set extracted Download link to model class
                     mStreamTapeModel.setDownloadUrl(generatedDownloadLink(response));
+                    // Set Direct Download link to model class
+                    mStreamTapeModel.setDirectDownloadUrl(redirectUrl(generatedDownloadLink(response)));
                     // Set extracted Title link to model class
                     mStreamTapeModel.setTitle(extractTitle(response));
                     // Set extracted Thumbnail image link to model class
@@ -89,9 +79,7 @@ public class StreamTapeExtractor {
                     mStreamTapeModelArrayList.add(mStreamTapeModel);
                     // Adding data values to the RequestListener
                     RequestListener.onResponse(mStreamTapeModelArrayList);
-                } else if (response.contains(COOKIE_NULL))
-                    RequestListener.onError("Please setup your cookies first!.");
-                else
+                } else
                     RequestListener.onError("Video not found!. Please check your url and try again!.");
             } else
                 RequestListener.onError("Response null");
@@ -180,16 +168,9 @@ public class StreamTapeExtractor {
             if (robot_link_elements != null) {
                 String strRobotLink = robot_link_elements.text();
                 strRobotLink = strRobotLink.substring(0, strRobotLink.lastIndexOf("="));
-                //String finalUrl  = globalValue + strRobotLink + "=" + getToken;
-
-                //Log.e("StreamTapeExtractor.java:190", "generatedDownloadLink  --> " + finalUrl);
-                //Log.e("StreamTapeExtractor.java:193", "redirectUrl  --> " + redirectUrl(finalUrl));
 
                 return globalValue + strRobotLink + "=" + getToken + "&stream=1";
             }
-
-            Log.e("StreamTapeExtractor.java:208", "getToken  --> " + getToken);
-
         }
 
         return null;

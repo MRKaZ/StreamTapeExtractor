@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# For Jsoup
+-keep public class org.jsoup.** {
+public *;
+}
+-keeppackagenames org.jsoup.nodes

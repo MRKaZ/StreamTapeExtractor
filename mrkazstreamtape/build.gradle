@@ -6,10 +6,10 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 31
-        versionCode 200
-        versionName "1.2"
+        versionCode 400
+        versionName "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -35,12 +35,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    // Volley for GET HTTP request // Not using
-    // implementation 'com.android.volley:volley:1.2.0'
-
-    // JSOUP for parse HTML
+    // JSOUP
     implementation 'org.jsoup:jsoup:1.14.3'
 
     // OkHttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
+    implementation("com.squareup.okhttp3:okhttp")
+
+    // ConsCrypt
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
 }

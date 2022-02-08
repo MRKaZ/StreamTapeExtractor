@@ -16,10 +16,11 @@ import java.util.regex.Pattern;
 
 public class StreamTapeUtils {
 
-    public static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36";
+    public static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.99 Safari/537.36"; // Chrome/71.0.3578.99
+    public static final String DEFAULT_USER_AGENT_2 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"; // Chrome/92.0.4515.131
+    public static final String STREAM_TAPES_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"; // Firefox/88.0
 
     public static final String VIDEO_NOT_FOUND = "Video not found!";
-    public static final String COOKIE_NULL = "\"Cookies null!\"";
 
     /**
      * @param mValues String of the encoded
@@ -35,9 +36,9 @@ public class StreamTapeUtils {
 
 
     /**
-     * @implNote Match the downloadable url using Regex pattern
-     * @param url  Url of the video
+     * @param url Url of the video
      * @return String list
+     * @implNote Match the downloadable url using Regex pattern
      */
     public static List<String> matchUrlRegex(String url) {
         List<String> finalMatchedList = new ArrayList<>();
@@ -53,11 +54,30 @@ public class StreamTapeUtils {
         return finalMatchedList;
     }
 
+    /**
+     * @param url Url what tou want to redirect!?
+     * @return As a String response
+     */
+    public static String redirectUrl(String url) {
+        try {
+            HttpURLConnection mHttpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+            mHttpURLConnection.setInstanceFollowRedirects(false);
+            mHttpURLConnection.setRequestProperty("referer", "https://streamtape.com/");
+            mHttpURLConnection.setRequestProperty("user-agent", STREAM_TAPES_USER_AGENT);
+            URL secondURL = new URL(mHttpURLConnection.getHeaderField("Location"));
+            URLConnection mURLConnection = secondURL.openConnection();
+            //Log.w("StreamTapeExtractor.java:230", "redirectUrl  --> " + mURLConnection.getURL().toURI());
+            return mURLConnection.getURL().toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     /**
-     * @implNote Match the Url token using Regex pattern
      * @param url Url of the response matched
      * @return As a String value
+     * @implNote Match the Url token using Regex pattern
      */
     public static String matchTokenRegex(String url) {
         final String regex = base64Decode("JnRva2VuPShbXlxzXSop");
@@ -71,4 +91,21 @@ public class StreamTapeUtils {
         return null;
     }
 
+    /**
+     * @param url
+     * @return
+     */
+    public static String getVideoId(String url){
+        return url.split("/")[4];
+    }
+
+    public static String customizeUrl(String url){
+        if (url.contains("streamtape.com"))
+            url = url.replace("streamtape.com", "stape.fun");
+
+        if (url.contains("/v/"))
+            url = url.replace("/v/", "/e/");
+
+        return url;
+    }
 }

@@ -1,9 +1,10 @@
 package com.mrkazofficial.mrkazstreamtape;
 
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.DEFAULT_USER_AGENT;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.DEFAULT_USER_AGENT_2;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.customizeUrl;
+import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.getVideoId;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -23,61 +24,53 @@ import okhttp3.Response;
 
 public class StreamTapeHttpUtils {
 
-    private static String cookies;
-    private static String userAgent;
-
-    public static void setCookies(String cookies) {
-        StreamTapeHttpUtils.cookies = cookies;
-    }
-
-    public static void setUserAgent(String userAgent) {
-        StreamTapeHttpUtils.userAgent = userAgent != null ? userAgent : DEFAULT_USER_AGENT;
-    }
-
     @SuppressLint("LongLogTag")
     public static String getHTTPResponse(String url) {
+
+        String customizedUrl = customizeUrl(url);
+
         try {
+            // OkHttp headers builder
+            Headers headersClientBuild = Headers.of(headers(url));
 
-            if (cookies != null) {
-                // Default timeout
-                OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                builder.connectTimeout(30, TimeUnit.SECONDS);
-                builder.readTimeout(30, TimeUnit.SECONDS);
-                builder.writeTimeout(30, TimeUnit.SECONDS);
+            OkHttpClient mOkHttpClient;
 
-                OkHttpClient client = builder.build();
+            OkHttpClient.Builder mOkHttpClientBuilder = new OkHttpClient.Builder();
+            mOkHttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+            mOkHttpClientBuilder.readTimeout(30, TimeUnit.SECONDS);
+            mOkHttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS);
 
-                // Headers map
-                HashMap<String, String> addHeaders = new HashMap<>();
-                addHeaders.put("Accept-Language", "en-US,en;q=0.9");
-                addHeaders.put("Cookie", "cf_clearance=" + cookies);
-                //addHeaders.put("Cookie", "_b=kube11; _csrf=855d645e56fc348f90e66983131b05d8d05bb03c02e53c3af5c060f5f170ecb3a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"yqTO__NKLFDiZhjsFLBi73PcZMXHNTsR\";}; cf_clearance=TDlcGeU_hgVTF_tC944cPq4O8bb7oR1vcgveHOAFh2I-1644185957-0-150; cf_session_id=4ml5m0bs8rl55biisnkakvdbau; sauth=a744821b16c66665da3dd11ed4343c05a5141bba86e08e1615c18850d35cd2bba:2:{i:0;s:5:\"sauth\";i:1;s:95:\"[\"fb837afc75a8cc35e512\",\"$2y$10$Y79.NT/6JvtmJIL3QoU1JesDxRzJX9NTi56IaHntU/9g9Gb0aacmK\",5184000]\";}");
-                addHeaders.put("User-Agent", DEFAULT_USER_AGENT);
-                //addHeaders.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36");
+            mOkHttpClient = mOkHttpClientBuilder.build();
 
-                // OkHttp headers builder
-                Headers headers = Headers.of(addHeaders);
+            Request request = new Request.Builder()
+                    .url(customizedUrl)
+                    .headers(headersClientBuild)
+                    .get()
+                    .build();
 
-                // Request
-                Request request = new Request.Builder()
-                        .headers(headers)
-                        .url(url)
-                        .get()
-                        .build();
+            Response responseData = mOkHttpClient.newCall(request).execute();
+            String response = responseData.body().string();
 
-                Response response = client.newCall(request).execute();
+            //System.out.println("(StreamTapeHttpUtils.java:55) --> " + response);
 
-                // Check status
-                if (response.body().toString().contains("Video not found!")) {
-                    return "Video not found!";
-                } else
-                    return response.body().string();
-
-            } else
-                return "Cookies null!";
+            // Check status
+            if (!response.contains("Video not found!")) {
+                return response;
+            } else {
+                return "Video not found!";
+            }
         } catch (Exception ex) {
-            Log.e("StreamTapeExtractor.java:56", "Error  --> " + ex.getMessage());
             return null;
         }
+    }
+
+    private static HashMap<String, String> headers(String url) {
+        HashMap<String, String> addHeaders = new HashMap<>();
+        addHeaders.put("authority", "stape.fun");
+        addHeaders.put("method", "GET");
+        addHeaders.put("path", "/e/" + getVideoId(url));
+        addHeaders.put("referer", "https://streamtape.com/");
+        addHeaders.put("user-agent", DEFAULT_USER_AGENT_2);
+        return addHeaders;
     }
 }

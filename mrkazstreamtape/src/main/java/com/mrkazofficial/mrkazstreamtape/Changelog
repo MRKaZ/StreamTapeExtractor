@@ -1,8 +1,22 @@
+[v1.4] [09/02/2022]
++ Fixed url extraction error!. (Cloudflare)
++ Added new StreamTapes domains. Extractor works for it.
++ Target SDK updated (31).
++ Garbage cleaned.
+• [Dependencies]
++ OkHttp (BOM).
++ ConsCrypt.
+• [Methods]
++ Added back Direct url method. (Rollback)
+- Removed Cookies, User-Agent functions to the extractor.
+
+[MRKaZ] [Taprobana (LK)
+
 [v1.3] [07/02/2022]
 + Fixed url extraction error!. (Cloudflare)
-[Dependencies]
+• [Dependencies]
 + Added OkHttp (Networking Library) dependency.
-[Methods]
+• [Methods]
 + Added Cookies, User-Agent functions to the extractor.
 - Removed direct download url.
 
@@ -13,8 +27,9 @@
 + Removed and Changed some extraction methods.
 + Removed and Changed some usage methods.
 - Migrated Volley dependency.
+• [Dependencies]
 + Added JSOUP (Html parser) dependency.
-[Methods]
+• [Methods]
 + Added new Direct url method
 - Removed (Context, Activity).
 
