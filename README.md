@@ -80,11 +80,6 @@ dependencies {
 * TODO : Initiate the StreamTapeExtractor !!If you missed this! extractor gives error!!
 */
 StreamTapeExtractor.initiate();
-// TODO : Fill up this with your cookies
-StreamTapeExtractor.setCookies("COOKIE"); // Required
-// TODO : Setup an User Agent if the extractor display's error!?.
-//StreamTapeExtractor.setUserAgent("");
-
 ```
 
 ### Extract the video data from the given url
