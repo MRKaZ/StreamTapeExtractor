@@ -55,7 +55,7 @@ allprojects {
 ```gradle
 dependencies {
 	...
-	 implementation 'com.github.MRKaZ:StreamTapeExtractor:v1.4'
+	 implementation 'com.github.MRKaZ:StreamTapeExtractor:v1.5'
 }
 ```
 
@@ -125,6 +125,11 @@ StreamTapeExtractor.initiate();
 
 ## Changelog
 ```
+[v1.5] [17/02/2022]
++ Fixed token position changing issue.
+
+[MRKaZ] [Taprobana (LK)
+
 [v1.4] [09/02/2022]
 + Fixed url extraction error!. (Cloudflare)
 + Added new StreamTapes domains. Extractor works for it.
