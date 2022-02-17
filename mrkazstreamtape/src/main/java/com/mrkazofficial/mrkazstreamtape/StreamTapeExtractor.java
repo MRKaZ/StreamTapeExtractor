@@ -18,11 +18,11 @@ limitations under the License.*/
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeHttpUtils.getHTTPResponse;
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.VIDEO_NOT_FOUND;
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.matchTokenRegex;
-import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.matchUrlRegex;
 import static com.mrkazofficial.mrkazstreamtape.StreamTapeUtils.redirectUrl;
 
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
+import android.util.Log;
 
 import org.conscrypt.Conscrypt;
 import org.jsoup.Jsoup;
@@ -158,7 +158,7 @@ public class StreamTapeExtractor {
             Document responseDoc = Jsoup.parse(mResponse);
 
             // Get the download token
-            String getToken = getToken(mResponse);
+            List<String> getToken = getToken(mResponse);
 
             // Actual link's... Redirecting to streamtape_do_not_delete.mp4
             //Element ideoo_link_elements = responseDoc.getElementById("ideoolink");
@@ -169,9 +169,13 @@ public class StreamTapeExtractor {
                 String strRobotLink = robot_link_elements.text();
                 strRobotLink = strRobotLink.substring(0, strRobotLink.lastIndexOf("="));
 
-                return globalValue + strRobotLink + "=" + getToken + "&stream=1";
+                if (getToken != null) {
+                    return globalValue + strRobotLink + "=" + getToken.get(getToken.size() - 1) + "&stream=1";
+                } else
+                    return null;
             }
-        }
+        } else
+            return null;
 
         return null;
     }
@@ -180,24 +184,16 @@ public class StreamTapeExtractor {
      * @param mResponse HTML response to parse Token
      * @return As a String with parsed Token
      */
-    private static String getToken(String mResponse) {
+    private static List<String> getToken(String mResponse) {
 
         Document responseDoc = Jsoup.parse(mResponse);
         // Search CSS Query <script> </script>
         Elements elements = responseDoc.select("script");
 
-        // List of urls
-        List<String> urlList = matchUrlRegex(elements.get(6).toString());
-
-        // Get the url by the positions --> Integer positions 0, 1, 2
-        //String strIdeooLink = urlList.get(0);
-        //String strIdeooLink_2 = urlList.get(1);
-        //String strRobotLink = urlList.get(2);
-
-        String strRobotLink = urlList.get(urlList.size() - 1);
-
-        if (strRobotLink.contains("&token=")) {
-            return matchTokenRegex(strRobotLink);
+        if (elements.toString().contains("&token=")) {
+            List<String> listTokens = new ArrayList<>();
+            listTokens.add(matchTokenRegex(elements.toString()));
+            return listTokens;
         }
 
         return null;

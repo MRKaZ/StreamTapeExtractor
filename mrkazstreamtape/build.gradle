@@ -6,10 +6,10 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 31
-        versionCode 400
-        versionName "1.4"
+        versionCode 500
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

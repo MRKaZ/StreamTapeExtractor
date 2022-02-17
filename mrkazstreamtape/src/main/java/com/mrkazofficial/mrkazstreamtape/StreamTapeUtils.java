@@ -34,26 +34,6 @@ public class StreamTapeUtils {
         return new String(bytes);
     }
 
-
-    /**
-     * @param url Url of the video
-     * @return String list
-     * @implNote Match the downloadable url using Regex pattern
-     */
-    public static List<String> matchUrlRegex(String url) {
-        List<String> finalMatchedList = new ArrayList<>();
-
-        final String regex = base64Decode("XCgnKFteXHNdKiknXCkuc3Vic3RyaW5n");
-
-        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-        final Matcher matcher = pattern.matcher(url);
-
-        while (matcher.find())
-            finalMatchedList.add(matcher.group(1));
-
-        return finalMatchedList;
-    }
-
     /**
      * @param url Url what tou want to redirect!?
      * @return As a String response
@@ -80,7 +60,7 @@ public class StreamTapeUtils {
      * @implNote Match the Url token using Regex pattern
      */
     public static String matchTokenRegex(String url) {
-        final String regex = base64Decode("JnRva2VuPShbXlxzXSop");
+        final String regex = base64Decode("JnRva2VuPShbXlxzXSopXCdcKQ==");
 
         final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
         final Matcher matcher = pattern.matcher(url);
@@ -92,8 +72,8 @@ public class StreamTapeUtils {
     }
 
     /**
-     * @param url
-     * @return
+     * @param url video url
+     * @return video id
      */
     public static String getVideoId(String url){
         return url.split("/")[4];

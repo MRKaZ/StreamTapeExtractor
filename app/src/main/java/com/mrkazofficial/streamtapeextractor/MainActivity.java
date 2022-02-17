@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnExtract).setOnClickListener(v -> {
             StreamTapeExtractor.extractData(
                     // Your StreamTape Url
-                    "PUT_YOUR_URL_HERE",
+                    "YOUR_URL_HERE",
                     // Request Listener
                     new RequestListener() {
                         @Override
